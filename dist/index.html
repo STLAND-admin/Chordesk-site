@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="一个关于折叠设备远程桌面的交互实验：内屏显示器与触摸键盘，背面外屏成为独立触控板。旋转 3D 握持模型，亲手体验双屏原型。">
+  <meta name="theme-color" content="#eeeee8">
+  <title>Duo Grip Lab — 把操作留在手边</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header class="site-header wrap"><a class="wordmark" href="#"><span class="mark" aria-hidden="true">◧</span> DUO <span>GRIP LAB</span></a><nav aria-label="主导航"><a href="#principle">设计思路</a><a href="#demo">交互原型 <span aria-hidden="true">↗</span></a></nav><span class="edition">INTERACTION STUDY / 01</span></header>
+  <main>
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="hero-copy"><p class="eyebrow"><span class="live-dot"></span> iPHONE DUO · 概念交互研究</p><h1 id="hero-title">把屏幕留给内容。<br>把操作<span class="serif">留在手边。</span></h1><p class="intro">拇指打字，食指与中指移动光标。<br>让展开后的内屏与背面外屏，<br>组成一台握在手里的「笔记本」。</p><div class="hero-links"><a class="primary" href="#demo">亲手体验原型 <span>↗</span></a><button class="text-button" id="reveal-back">看看手指在哪里 <span>↻</span></button></div><p class="small-note">Monitor + Keyboard + Touchpad<br>熟悉的三部分，新的空间关系。</p></div>
+      <div class="model-panel">
+        <div class="model-top"><span>01 / GRIP STUDY</span><span id="model-label">展开 · 正面</span></div>
+        <canvas id="grip-canvas" aria-label="3D 概念模型：双手握持展开设备，拇指在正面键盘，食指和中指在背面触控板。可拖动旋转。" tabindex="0"></canvas>
+        <div class="model-legend"><span><i class="teal"></i>拇指 / 键盘</span><span><i class="orange"></i>食指 · 中指 / 触控板</span></div>
+        <div class="model-controls"><div class="segmented" aria-label="模型视角"><button data-view="front" aria-pressed="true">正面</button><button data-view="back" aria-pressed="false">背面</button><button data-view="orbit" aria-pressed="false">环绕</button></div><button class="round-button" id="pause-motion" aria-label="暂停动画" aria-pressed="false">Ⅱ</button><span class="drag-hint">拖动模型自由旋转</span></div>
+      </div>
+      <div class="grip-strip"><div><span class="eyebrow">试着换一种握法</span><div class="segmented light" aria-label="握持方向"><button data-grip="right" aria-pressed="true">外屏在右侧</button><button data-grip="bottom" aria-pressed="false">外屏在下方</button></div></div><p id="grip-description">右手食指与中指轻搭背面外屏，左手辅助支撑。双手拇指停留在正面键盘区。</p><small>示意模型用于表达手指分工，<br>不代表精确硬件尺寸或经验证的握姿。</small></div>
+    </section>
+
+    <section class="principle wrap" id="principle" aria-labelledby="principle-title">
+      <div class="section-heading"><p class="eyebrow">02 / WHY THIS LAYOUT</p><h2 id="principle-title">手握住设备，<br>操作也留在握持区。</h2><p>把笔记本上熟悉的分工，映射到前后两个显示面。<br>上方阅读，下方输入，背面控制。</p></div>
+      <div class="role-list"><button class="role-row active" data-action="overview"><span class="role-number">01</span><div><h3>Monitor <span>看内容</span></h3><p>内屏上方约 ¾ 留给远程画面，避免键盘和触控板挤占视野。</p></div><span class="role-icon">↗</span></button><button class="role-row" data-action="keyboard"><span class="role-number">02</span><div><h3>Keyboard <span>拇指打字</span></h3><p>内屏下方约 ¼ 常驻触摸键盘，保持双手握持时的输入位置。</p></div><span class="role-icon">⌨</span></button><button class="role-row" data-action="trackpad"><span class="role-number">03</span><div><h3>Touchpad <span>指尖控制</span></h3><p>让食指、中指在背面外屏完成相对移动、点击和滚动。</p></div><span class="role-icon">⌁</span></button></div>
+    </section>
+
+    <section class="demo-section" id="demo" aria-labelledby="demo-title"><div class="wrap">
+      <div class="demo-heading"><div><p class="eyebrow">03 / TRY IT YOURSELF</p><h2 id="demo-title">两块屏幕。一个工作空间。</h2><p>下方键盘可以直接点击。右侧独立面板就是外屏触控板。</p></div><span class="demo-badge"><span class="live-dot"></span> 本地交互模拟</span></div>
+      <div class="workbench-toolbar"><div class="edge-controls"><span>外屏位置</span><div class="segmented dark" aria-label="原型外屏位置"><button data-edge="left" aria-pressed="false">左侧</button><button data-edge="right" aria-pressed="true">右侧</button><button data-edge="top" aria-pressed="false">上方</button><button data-edge="bottom" aria-pressed="false">下方</button></div></div><button id="reset-demo" class="reset-button">↺ 重置演示</button></div>
+      <div class="bench-viewport"><div id="bench" class="bench" data-edge="right">
+        <div class="inner-device"><div class="inner-screen"><div class="monitor" id="monitor" aria-label="模拟远程桌面"><div class="desktop-menubar"><span>DUO DESKTOP</span><span>LOCAL DEMO</span></div><button class="desktop-file" id="open-note"><span>▰</span>Demo</button><article class="note-window" id="note-window"><div class="window-title" id="window-title"><span class="traffic" aria-hidden="true"><i></i><i></i><i></i></span><span>Untitled — 我的远程文稿</span><span>⌘</span></div><div class="document-body" id="document-body"><p class="document-label">YOUR IDEAS, MORE ROOM.</p><div id="document-text" aria-label="演示文稿"></div></div></article><div class="desktop-cursor" id="desktop-cursor" aria-hidden="true"><svg viewBox="0 0 24 30"><path d="M2 2v23l6-6 5 10 5-3-5-9 9-1Z" fill="#172c39" stroke="white" stroke-width="2" stroke-linejoin="round"/></svg></div><div class="context-menu" id="context-menu" hidden><button data-command="select">全选文稿</button><button data-command="copy">复制到演示剪贴板</button><button data-command="clear">清空文稿</button></div></div><div class="touch-keyboard" id="keyboard" role="group" aria-label="常驻触摸键盘"></div></div><span class="device-caption">INNER / MONITOR + KEYBOARD</span></div>
+        <div class="outer-device"><div class="trackpad" id="trackpad" tabindex="0" role="application" aria-label="外屏触控板。滑动移动光标，轻点左键，停住后拖动窗口标题栏，双指或滚轮滚动，右键打开菜单。"><span class="pad-eyebrow">OUTER DISPLAY</span><div class="pad-center"><span class="pad-glyph">⌁</span><h3>Touchpad</h3><p>食指 / 中指</p></div><div class="pad-trace" id="pad-trace"></div><span class="pad-bottom">SLIDE · TAP · SCROLL</span></div><span class="device-caption">OUTER / INDEPENDENT TOUCHPAD</span></div>
+      </div></div>
+      <div class="demo-status"><span id="input-status" role="status">就绪 · 先点 ⌘ → A 全选，再点字母开始输入</span><span>不会操作这台电脑</span></div>
+      <div class="gesture-guide"><div><b>01</b><span>滑动移动光标<br><small>鼠标按下移动 / 单指滑动</small></span></div><div><b>02</b><span>轻点与拖拽<br><small>停住片刻，再移动窗口标题栏</small></span></div><div><b>03</b><span>滚动与右键<br><small>双指滚动 / 双指轻点；或滚轮 / 右键</small></span></div></div>
+    </div></section>
+
+    <section class="compare wrap" aria-labelledby="compare-title"><div class="section-heading"><p class="eyebrow">04 / THE DESIGN HYPOTHESIS</p><h2 id="compare-title">少一些越过屏幕。<br>多一些指尖配合。</h2><p>设计目标是减少大范围伸手与遮挡。<br>是否更自然、更精准，仍需在真实设备上验证。</p></div><div class="comparison"><div class="comparison-controls segmented light" aria-label="设计对比"><button data-comparison="combined" aria-pressed="false">全部集中在内屏</button><button data-comparison="separate" aria-pressed="true">内外屏分工</button></div><div class="compare-diagram" id="compare-diagram" data-mode="separate"><div class="diagram-front"><span class="diagram-monitor">Monitor</span><span class="diagram-pad">Touchpad</span><span class="diagram-keys">Keyboard</span></div><span class="diagram-arrow">↔</span><div class="diagram-back"><span>Touchpad</span><small>背面 · 食指 / 中指</small></div></div><p id="comparison-caption">显示留在前上方；拇指与背面指尖各司其职，触控板独立于内屏。</p></div></section>
+    <section class="questions wrap"><div><p class="eyebrow">NEXT / 从假设走向验证</p><h2>先验证握持，再验证效率。</h2></div><ul><li><span>01</span>双手长时间握持，是否容易疲劳？</li><li><span>02</span>支撑设备与触控输入，能否避免误触？</li><li><span>03</span>不同手型和握法，能否精准移动光标？</li><li><span>04</span>公开外屏接口，能否支持持续独立交互？</li></ul></section>
+  </main>
+  <footer class="wrap"><a class="wordmark" href="#">◧ DUO <span>GRIP LAB</span></a><p>交互概念原型 · 虚拟桌面与虚拟外屏<br>未接入真实远程控制；外屏能力需以可用公开 API 与实机验证为准。</p><span>MADE TO BE HELD.<br>DESIGNED TO BE TRIED.</span></footer>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
