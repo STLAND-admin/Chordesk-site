@@ -1,3 +1,4 @@
+import { createInputCapture } from './input-capture.js';
 const $ = (selector) => document.querySelector(selector);
 const all = (selector) => [...document.querySelectorAll(selector)];
 const choose = (attribute, value) => all(`[${attribute}]`).forEach(button => button.setAttribute('aria-pressed', String(button.getAttribute(attribute) === value)));
@@ -37,14 +38,38 @@ function keyInput(key) {
 const clamp=(v,min,max)=>Math.min(max,Math.max(min,v));
 function renderPointer(){ $('#desktop-cursor').style.left=`${state.cursor.x*100}%`;$('#desktop-cursor').style.top=`${state.cursor.y*100}%`;$('#note-window').style.left=`${state.window.x*100}%`;$('#note-window').style.top=`${state.window.y*100}%`; }
 function move(dx,dy,dragging=false){const previous={...state.cursor};state.cursor.x=clamp(state.cursor.x+dx*1.5,.01,.99);state.cursor.y=clamp(state.cursor.y+dy*1.5,.01,.99);if(dragging){state.window.x=clamp(state.window.x+state.cursor.x-previous.x,.01,.23);state.window.y=clamp(state.window.y+state.cursor.y-previous.y,.03,.2);}renderPointer();}
-function leftClick(){ $('#context-menu').hidden=true;state.selected=false;renderDocument();status('左键点击 · 文稿已聚焦'); }
+function virtualHit(element) {
+  if (!element || element.hidden) return false;
+  const monitor = $('#monitor').getBoundingClientRect();
+  const rect = element.getBoundingClientRect();
+  const x = monitor.left + state.cursor.x * monitor.width;
+  const y = monitor.top + state.cursor.y * monitor.height;
+  return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+}
+function leftClick(){
+  if (!$('#context-menu').hidden) {
+    const command = all('[data-command]').find(virtualHit);
+    if (command) { runCommand(command.dataset.command); return; }
+  }
+  $('#context-menu').hidden=true;
+  if (virtualHit($('#open-note'))) { state.window={x:.16,y:.12};renderPointer();status('打开 Demo 文稿');return; }
+  state.selected=false;renderDocument();status('左键点击 · 文稿已聚焦');
+}
 function rightClick(){ const menu=$('#context-menu');menu.hidden=false;menu.style.left=`${clamp(state.cursor.x,.05,.65)*100}%`;menu.style.top=`${clamp(state.cursor.y,.05,.65)*100}%`;status('右键 · 打开文稿菜单'); }
 function reset(){Object.assign(state,{text:welcome,caret:welcome.length,selected:false,shift:false,cmd:false,opt:false,ctrl:false,undo:[],cursor:{x:.5,y:.3},window:{x:.16,y:.12}});renderDocument();renderPointer();$('#context-menu').hidden=true;$('#document-body').scrollTop=0;status('已重置 · 先点 ⌘ → A 全选，再点字母开始输入');}
 $('#reset-demo').onclick=reset;
 function setEdge(edge){$('#bench').dataset.edge=edge;choose('data-edge',edge);}
 all('[data-edge]').filter(b=>b.tagName==='BUTTON').forEach(b=>b.onclick=()=>setEdge(b.dataset.edge));
 $('#open-note').onclick=()=>{state.window={x:.16,y:.12};renderPointer();status('打开 Demo 文稿');};
-all('[data-command]').forEach(b=>b.onclick=()=>{if(b.dataset.command==='select')state.selected=true;if(b.dataset.command==='copy')state.clipboard=state.text;if(b.dataset.command==='clear'){state.selected=true;keyInput('delete');}$('#context-menu').hidden=true;renderDocument();status({select:'已全选文稿',copy:'已复制到演示剪贴板',clear:'已清空文稿'}[b.dataset.command]);});
+function runCommand(command) {
+  if(command==='select')state.selected=true;
+  if(command==='copy')state.clipboard=state.text;
+  if(command==='clear'){state.selected=true;keyInput('delete');}
+  $('#context-menu').hidden=true;
+  renderDocument();
+  status({select:'已全选文稿',copy:'已复制到演示剪贴板',clear:'已清空文稿'}[command]);
+}
+all('[data-command]').forEach(b=>b.onclick=()=>runCommand(b.dataset.command));
 $('#monitor').addEventListener('pointerdown',e=>{if(e.target===$('#monitor')){const r=e.currentTarget.getBoundingClientRect();state.cursor={x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height};renderPointer();leftClick();}});
 // Direct title dragging also makes the monitor independently demonstrable.
 let titleDrag;
@@ -63,4 +88,39 @@ pad.addEventListener('pointercancel',clearTouch);pad.addEventListener('lostpoint
 pad.addEventListener('contextmenu',e=>{e.preventDefault();rightClick();});pad.addEventListener('wheel',e=>{e.preventDefault();$('#document-body').scrollTop+=e.deltaY;status('滚轮 · 滚动文稿');},{passive:false});
 pad.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)){e.preventDefault();move(e.key==='ArrowLeft'?-.02:e.key==='ArrowRight'?.02:0,e.key==='ArrowUp'?-.02:e.key==='ArrowDown'?.02:0);status('方向键 · 移动光标');}else if(e.key==='Enter'){e.preventDefault();leftClick();}else if(e.key==='Escape')$('#context-menu').hidden=true;});
 renderDocument();renderPointer();
-window.addEventListener('pagehide',()=>scene?.dispose(),{once:true});
+function physicalKey(event) {
+  const names = {Backspace:'delete',Enter:'return',Tab:'tab',' ':'space',ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down'};
+  const key = names[event.key] || (event.key.length === 1 ? event.key.toLowerCase() : null);
+  if (!key) return;
+  state.cmd=event.metaKey;state.ctrl=event.ctrlKey;state.opt=event.altKey;state.shift=event.shiftKey;
+  keyInput(key);
+  state.cmd=false;state.ctrl=false;state.opt=false;state.shift=false;
+  renderDocument();
+  const button=all('.touch-key').find(b=>b.dataset.key===key);
+  if(button){button.classList.add('physical-key');setTimeout(()=>button.classList.remove('physical-key'),130);}
+}
+const capture = createInputCapture({
+  target: $('#bench'), button: $('#capture-input'),
+  onChange(active) {
+    clearTouch();titleDrag=null;
+    document.body.classList.toggle('input-captured',active);
+    $('#capture-banner').hidden=!active;
+    $('.pad-center h3').textContent=active?'已接管':'Touchpad';
+    $('.pad-center p').textContent=active?'直接滑动 · Esc 退出':'食指 / 中指';
+    if(active){
+      // Both displays remain visible while the page cursor is locked.
+      $('#demo').scrollIntoView({behavior:'instant',block:'start'});
+    } else {state.cmd=false;state.ctrl=false;state.opt=false;state.shift=false;renderDocument();}
+  },
+  onMove(dx,dy,drag) {
+    const r=$('#monitor').getBoundingClientRect();
+    move(dx / Math.max(1,r.width) / 1.5,dy / Math.max(1,r.height) / 1.5,drag);
+    status(drag?'拖动文稿窗口':'接管中 · 移动光标');
+  },
+  canDrag:()=>$('#context-menu').hidden && virtualHit($('#window-title')),
+  onDragEnd:()=>status('拖拽结束'),
+  onClick:leftClick, onRightClick:rightClick,
+  onScroll(dy,mode){$('#document-body').scrollTop+=dy*(mode===1?16:mode===2?$('#document-body').clientHeight:1);status('接管中 · 双指滚动文稿');},
+  onKey:physicalKey, onStatus:status
+});
+window.addEventListener('pagehide',()=>{capture.dispose();scene?.dispose();},{once:true});
