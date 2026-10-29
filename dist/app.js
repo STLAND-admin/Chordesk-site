@@ -2,12 +2,14 @@ const $ = s => document.querySelector(s);
 const all = s => [...document.querySelectorAll(s)];
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 let scene;
-try { const {createGripScene} = await import('./grip-scene.js'); scene = createGripScene($('#grip-canvas')); scene.setAction('direct'); scene.setView('orbit'); }
+try { const {createGripScene} = await import('./grip-scene.js'); scene = createGripScene($('#grip-canvas'), {onContactChange: count => { $('#model-contacts').textContent = `背面 ${count} 指 · ${['直接触控','正面双指上下滑：窗口总览','按住切换正面触控板'][count]}`; all('[data-contact]').forEach(b=>b.setAttribute('aria-pressed', String(Number(b.dataset.contact)===count))); }}); scene.setView('orbit'); }
 catch { $('#grip-canvas').hidden = true; $('.model-fallback').hidden = false; }
 let playing = !reducedMotion;
 function updateMotion() { scene?.setPlaying(playing); $('#pause-motion').textContent = playing ? '暂停动画' : '播放动画'; $('#pause-motion').setAttribute('aria-pressed',String(!playing)); }
 updateMotion();
 $('#pause-motion').onclick = () => { playing = !playing; updateMotion(); };
+$('#cycle-chords').onclick = () => { scene?.cycleChords(); playing = !reducedMotion; updateMotion(); };
+all('[data-contact]').forEach(button => button.onclick = () => scene?.setRearContacts(Number(button.dataset.contact)));
 all('[data-view]').forEach(button => button.onclick = () => { scene?.setView(button.dataset.view); all('[data-view]').forEach(b=>b.setAttribute('aria-pressed',String(b===button))); $('#model-label').textContent = `展开 · ${{front:'正面',back:'背面',orbit:'环绕'}[button.dataset.view]}`; });
 all('[data-grip]').forEach(button => button.onclick = () => { scene?.setGrip(button.dataset.grip); all('[data-grip]').forEach(b=>b.setAttribute('aria-pressed',String(b===button))); });
 all('[data-scene]').forEach(button => button.onclick = () => { scene?.setAction(button.dataset.scene); all('[data-scene]').forEach(b=>b.classList.toggle('active',b===button)); $('#model-label').textContent = {direct:'正面 · 拇指触控',overview:'组合 · 一指与正面双指',trackpad:'组合 · 双指按住，正面精细移动'}[button.dataset.scene]; });
@@ -29,7 +31,7 @@ function renderMode() {
  $('#rear-description').innerHTML = state.rear===0 ? (state.manualTrackpad ? '菜单已切为触控板<br>背面没有按住手指' : '默认直接触控<br>背面没有按住手指') : state.rear===1 ? '正面双指 ↑ 打开窗口总览<br>正面双指 ↓ 退出窗口总览' : '正面变成相对触控板<br>松开背面，恢复原模式';
 }
 function setRear(count) {
- clearTimeout(rearTimer); clearFront(); state.rear=count; state.trackpad=false;
+ clearTimeout(rearTimer); clearFront(); scene?.setRearContacts(count); state.rear=count; state.trackpad=false;
  if(count===2) { rearTimer=setTimeout(()=>{ if(state.rear!==2)return;clearFront();state.trackpad=true;renderMode();status('背面双指长按 → 正面触控板 · 在内屏拖动以相对移动光标');scene?.setAction('trackpad'); },450); }
  if(count===1){status('背面一指按住 · 现在正面双指上推或下滑');scene?.setAction('overview');}
  if(count===0){status('背面已松开 · 恢复'+(state.manualTrackpad?'触控板':'直接触控'));scene?.setAction('direct');}

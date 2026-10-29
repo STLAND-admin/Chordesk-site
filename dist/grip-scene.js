@@ -140,7 +140,7 @@ function rearTexture() {
   }, 512, 1024);
 }
 
-export function createGripScene(canvas) {
+export function createGripScene(canvas, {onContactChange = () => {}} = {}) {
   if (!(canvas instanceof HTMLCanvasElement)) throw new TypeError('createGripScene requires a canvas.');
   let renderer;
   try {
@@ -275,6 +275,8 @@ export function createGripScene(canvas) {
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   let playing = !reducedMotion.matches, disposed = false;
   let currentView = 'orbit', currentAction = 'direct', gripTarget = 0, gripBlend = 0;
+  let contactOverride = null, lastContactCount = -1, lastTextureAction = 'direct';
+  let manualOrbit = false;
   let yaw = .60, pitch = .18, targetYaw = yaw, targetPitch = pitch;
   let distance = 10.8, lastTime = 0, animationTime = 0, frameId = 0;
   let dragging = false, dragPoint = null;
@@ -295,6 +297,7 @@ export function createGripScene(canvas) {
   function setView(view) {
     if (!['front', 'back', 'orbit'].includes(view)) return;
     currentView = view;
+    manualOrbit = false;
     const next = view === 'back' ? Math.PI : view === 'front' ? 0 : .65;
     targetYaw = yaw + Math.atan2(Math.sin(next - yaw), Math.cos(next - yaw));
     targetPitch = view === 'orbit' ? .18 : .04;
@@ -306,12 +309,19 @@ export function createGripScene(canvas) {
   function setAction(action) {
     if (!['direct', 'overview', 'keyboard', 'trackpad'].includes(action)) return;
     currentAction = action;
-    material.front.map.dispose(); material.front.map = frontTexture(action); material.front.needsUpdate = true;
-    setView(action === 'trackpad' ? 'back' : action === 'keyboard' ? 'front' : 'orbit');
+    setRearContacts(action === 'trackpad' ? 2 : action === 'overview' ? 1 : 0);
+  }
+  function setRearContacts(count) {
+    if (count !== null && ![0, 1, 2].includes(count)) return;
+    contactOverride = count;
+  }
+  function cycleChords() {
+    contactOverride = null; animationTime = 0; currentAction = 'direct';
   }
   function setPlaying(value) { playing = Boolean(value); }
   function pointerDown(event) {
     if (event.button !== 0) return;
+    manualOrbit = true;
     dragging = true; dragPoint = [event.clientX, event.clientY];
     canvas.setPointerCapture(event.pointerId); canvas.style.cursor = 'grabbing';
   }
@@ -337,8 +347,12 @@ export function createGripScene(canvas) {
     lastTime = ms;
     if (playing && !dragging) animationTime += dt;
     const damping = reducedMotion.matches ? 1 : 1 - Math.exp(-dt * 8);
+    const cycle = animationTime % 12;
+    const contactCount = contactOverride ?? (cycle < 3 ? 0 : cycle < 6 ? 1 : cycle < 10 ? 2 : 0);
+    const orbitDemo = currentView === 'orbit' && contactOverride === null && !manualOrbit && !reducedMotion.matches;
+    const viewYaw = orbitDemo ? (contactCount === 0 ? .65 : Math.PI - .28) : targetYaw;
     gripBlend = lerp(gripBlend, gripTarget, damping);
-    yaw = lerp(yaw, targetYaw, damping);
+    yaw = lerp(yaw, viewYaw, damping);
     pitch = lerp(pitch, targetPitch, damping);
     hardware.rotation.z = -Math.PI / 2 * gripBlend;
     rearAssembly.rotation.z = hardware.rotation.z;
@@ -357,10 +371,25 @@ export function createGripScene(canvas) {
       const sleeveEnd = end.clone().add(vec([side * .10, -.28, -.03]));
       placeBone(cuff, sleeveStart, sleeveEnd, .318);
     });
+    // At rest the fingertips visibly hover; each chord lowers only its exact contacts.
+    if (contactCount !== lastContactCount) { lastContactCount = contactCount; onContactChange(contactCount); }
+    const poseAction = currentAction === 'keyboard' ? 'keyboard' : contactCount === 2 ? 'trackpad' : contactCount === 1 ? 'overview' : 'direct';
+    if (poseAction !== lastTextureAction) {
+      lastTextureAction = poseAction;
+      material.front.map.dispose(); material.front.map = frontTexture(poseAction); material.front.needsUpdate = true;
+    }
     fingers.forEach((f, index) => {
       const points = f.from.map((p, i) => p.clone().lerp(f.to[i], gripBlend));
-      const rearActive = f.active && (f.side > 0 || gripBlend > .85);
-      const roleActive = f.front || (rearActive && (currentAction === 'trackpad' || (currentAction === 'overview' && f.type === 'index')));
+      const firstContact = f.side > 0 && f.type === 'index';
+      const secondContact = gripBlend > .5 ? f.side < 0 && f.type === 'index' : f.side > 0 && f.type === 'middle';
+      const touchingRear = (firstContact && contactCount >= 1) || (secondContact && contactCount === 2);
+      const roleActive = f.front || touchingRear;
+      f.contactBlend = lerp(f.contactBlend ?? 0, touchingRear ? 1 : 0, damping);
+      if (!f.front && f.active) {
+        const lift = (1 - f.contactBlend) * .28;
+        points[3].z -= lift; points[2].z -= lift * .52;
+        points[3].y += (1 - f.contactBlend) * .07;
+      }
       const phase = animationTime * (f.front ? 3.8 : 1.5) + (f.side < 0 ? Math.PI : 0) + (f.type === 'middle' ? .3 : 0);
       if (roleActive && playing) {
         if (f.front) {
@@ -372,7 +401,7 @@ export function createGripScene(canvas) {
           const slide = 0; // Rear fingers hold a chord; they no longer slide to move a cursor.
           points[3].y += slide;
           points[2].y += slide * .5;
-          points[3].x += Math.cos(phase) * .025;
+          // A held fingertip stays planted rather than scrubbing the rear screen.
         }
       }
       f.bones.forEach((bone, i) => placeBone(bone, points[i], points[i + 1], f.radius * (1 - i * .085)));
@@ -384,7 +413,7 @@ export function createGripScene(canvas) {
       f.nail.position.z += f.front ? f.radius * .79 : -f.radius * .76;
       f.nail.rotation.z = f.front ? f.side * .75 : f.side * .68;
       if (f.ring) {
-        f.ring.visible = roleActive;
+        f.ring.visible = f.front || (touchingRear && f.contactBlend > .85);
         f.ring.position.copy(points[3]);
         f.ring.position.z = f.front ? .159 : -.167;
         const pulse = playing ? (Math.sin(animationTime * 3 + index) + 1) / 2 : .4;
@@ -417,5 +446,5 @@ export function createGripScene(canvas) {
     textures.forEach(t => t.dispose()); materials.forEach(m => m.dispose()); geometries.forEach(g => g.dispose());
     renderer.dispose();
   }
-  return { setView, setGrip, setAction, setPlaying, resize, dispose };
+  return { setView, setGrip, setAction, setRearContacts, cycleChords, setPlaying, resize, dispose };
 }
