@@ -32,7 +32,9 @@ python3 -m http.server 8744 --bind 127.0.0.1 --directory dist
 
 工作流 `.github/workflows/pages.yml` 仅发布 `dist/`。仓库需要启用 Pages / GitHub Actions，并设置 Actions 变量 `PAGES_ENABLED=true`。未启用时工作流跳过发布，避免意外公开。
 
-预期地址：`https://stland-admin.github.io/Chordesk-site/`；是否已发布以 GitHub Pages 部署结果为准。
+公开体验地址：[Chordesk](https://stland-admin.github.io/Chordesk-site/)。2026-10-29 Pages 首次部署成功，HTTP 200 已核对。
+
+网页中的“提交体验反馈”打开 GitHub 模板，提交内容公开；不要求填写联系方式，不要包含配对凭据或私人桌面内容。原生 App 的 TestFlight 与公证 Mac 安装包仍在准备中。
 
 依赖：本地 Three.js 0.180.0（MIT，见 `dist/vendor/THREE-LICENSE.txt`），不依赖外部 CDN。`input-capture.js` 为旧演示保留模块，新版不启用 Pointer Lock；旧交互可从 Git 历史查看。
 
