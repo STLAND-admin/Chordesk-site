@@ -1,0 +1,42 @@
+name: 操作体验反馈
+description: 告诉我们哪一组和弦容易理解，哪一步不自然。
+title: "[体验] "
+body:
+  - type: markdown
+    attributes:
+      value: "提交内容会公开。请勿上传配对二维码、密钥、账号、设备序列号或包含私人内容的远程桌面截图。无需提供联系方式。"
+  - type: dropdown
+    id: surface
+    attributes:
+      label: 体验方式
+      options:
+        - 浏览器概念演示
+        - Duo + Mac 真机
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: App 版本与系统 / 浏览器
+      placeholder: 例如 Chordesk 1.17、Mac 0.14.0，或 Safari / Edge
+  - type: dropdown
+    id: gesture
+    attributes:
+      label: 尝试的操作
+      options:
+        - 默认直接触控
+        - 背面一指 + 正面双指上下滑
+        - 背面双指长按临时触控板
+        - 键盘输入与收起
+        - 其他
+  - type: textarea
+    id: result
+    attributes:
+      label: 预期、实际结果与重现步骤
+    validations:
+      required: true
+  - type: textarea
+    id: experience
+    attributes:
+      label: 感受与偏好
+      description: 学习成本、误触频率、主观延迟、遮挡；更愿意用背面和弦还是菜单，为什么？

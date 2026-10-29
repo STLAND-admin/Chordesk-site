@@ -3,7 +3,7 @@
  * createGripScene(canvas) -> setView(front|back|orbit), setGrip(right|bottom),
  * setAction(overview|keyboard|trackpad), setPlaying(boolean), resize(), dispose().
  * Right grip: right index/middle operate the rear half; bottom grip: both hands do.
- * Both thumbs always stay on the front keyboard. All input remains browser-local.
+ * Thumbs operate the front; rear fingers hold mode chords. All input remains browser-local.
  */
 import * as THREE from './vendor/three.module.js';
 
@@ -46,7 +46,7 @@ function roundedRect(ctx, x, y, w, h, r, fill) {
   ctx.fill();
 }
 
-function frontTexture() {
+function frontTexture(mode = 'direct') {
   return textureFrom((ctx, w, h) => {
     const bg = ctx.createLinearGradient(0, 0, w, h * .75);
     bg.addColorStop(0, '#324b79');
@@ -79,13 +79,18 @@ function frontTexture() {
     ctx.fillText('Move your ideas.', 150, 312);
     ctx.fillStyle = '#718094';
     ctx.font = '27px system-ui, sans-serif';
-    ctx.fillText('Monitor above. Input below.', 150, 380);
+    ctx.fillText(mode === 'trackpad' ? 'Hold two. Move precisely.' : mode === 'overview' ? 'Hold one. Swipe up or down.' : 'Touch directly. Type when needed.', 150, 380);
     roundedRect(ctx, 150, 430, 692, 132, 16, '#e8edf8');
     ctx.fillStyle = '#8192c5';
     [0, 1, 2].forEach(i => roundedRect(ctx, 177, 457 + i * 30, [492, 614, 356][i], 10, 5, '#a3afd1'));
     ctx.fillStyle = '#263245';
     ctx.beginPath(); ctx.moveTo(744, 563); ctx.lineTo(744, 601); ctx.lineTo(755, 591); ctx.lineTo(765, 611); ctx.lineTo(775, 606); ctx.lineTo(765, 586); ctx.lineTo(782, 586); ctx.closePath(); ctx.fill();
 
+    if (mode !== 'keyboard') {
+      ctx.fillStyle = '#ffffff99'; ctx.font = '26px system-ui, sans-serif';
+      ctx.fillText(mode === 'trackpad' ? 'TRACKPAD · FRONT THUMB' : 'DIRECT TOUCH · FULL DESKTOP', 150, 850);
+      return;
+    }
     const keyboardY = h * .75;
     ctx.fillStyle = '#d3d9e4'; ctx.fillRect(0, keyboardY, w, h - keyboardY);
     ctx.fillStyle = '#a8b3c4'; ctx.fillRect(0, keyboardY, w, 2);
@@ -269,7 +274,7 @@ export function createGripScene(canvas) {
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   let playing = !reducedMotion.matches, disposed = false;
-  let currentView = 'orbit', currentAction = 'overview', gripTarget = 0, gripBlend = 0;
+  let currentView = 'orbit', currentAction = 'direct', gripTarget = 0, gripBlend = 0;
   let yaw = .60, pitch = .18, targetYaw = yaw, targetPitch = pitch;
   let distance = 10.8, lastTime = 0, animationTime = 0, frameId = 0;
   let dragging = false, dragPoint = null;
@@ -299,8 +304,9 @@ export function createGripScene(canvas) {
     gripTarget = grip === 'bottom' ? 1 : 0;
   }
   function setAction(action) {
-    if (!['overview', 'keyboard', 'trackpad'].includes(action)) return;
+    if (!['direct', 'overview', 'keyboard', 'trackpad'].includes(action)) return;
     currentAction = action;
+    material.front.map.dispose(); material.front.map = frontTexture(action); material.front.needsUpdate = true;
     setView(action === 'trackpad' ? 'back' : action === 'keyboard' ? 'front' : 'orbit');
   }
   function setPlaying(value) { playing = Boolean(value); }
@@ -354,7 +360,7 @@ export function createGripScene(canvas) {
     fingers.forEach((f, index) => {
       const points = f.from.map((p, i) => p.clone().lerp(f.to[i], gripBlend));
       const rearActive = f.active && (f.side > 0 || gripBlend > .85);
-      const roleActive = f.front ? currentAction !== 'trackpad' : rearActive && currentAction !== 'keyboard';
+      const roleActive = f.front || (rearActive && (currentAction === 'trackpad' || (currentAction === 'overview' && f.type === 'index')));
       const phase = animationTime * (f.front ? 3.8 : 1.5) + (f.side < 0 ? Math.PI : 0) + (f.type === 'middle' ? .3 : 0);
       if (roleActive && playing) {
         if (f.front) {
@@ -363,7 +369,7 @@ export function createGripScene(canvas) {
           points[2].z += tap * .035;
           points[3].x += Math.sin(phase * .32) * .08;
         } else {
-          const slide = Math.sin(phase) * .10;
+          const slide = 0; // Rear fingers hold a chord; they no longer slide to move a cursor.
           points[3].y += slide;
           points[2].y += slide * .5;
           points[3].x += Math.cos(phase) * .025;

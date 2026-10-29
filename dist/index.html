@@ -1,48 +1,56 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="一个关于折叠设备远程桌面的交互实验：内屏显示器与触摸键盘，背面外屏成为独立触控板。旋转 3D 握持模型，亲手体验双屏原型。">
-  <meta name="theme-color" content="#f5f5f7">
-  <title>Duo Grip Lab — 把操作留在手边</title>
-  <link rel="stylesheet" href="./style.css">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f5f5f7">
+<title>Chordesk — 像按和弦一样，切换你的桌面。</title>
+<meta name="description" content="为 iPhone Duo 设计的远程桌面：拇指负责精细操作，背面手指像按和弦一样切换触控、窗口总览和触控板。旋转握持模型，体验交互原型。">
+<link rel="icon" href="./assets/Chordesk.svg" type="image/svg+xml"><link rel="stylesheet" href="./style.css">
 </head>
 <body>
-  <header class="site-header wrap"><a class="wordmark" href="#"><span class="mark" aria-hidden="true">◧</span> DUO <span>GRIP LAB</span></a><nav aria-label="主导航"><a href="#principle">设计思路</a><a href="#demo">交互原型 <span aria-hidden="true">↗</span></a></nav><span class="edition">INTERACTION STUDY / 01</span></header>
-  <main>
-    <section class="hero wrap" aria-labelledby="hero-title">
-      <div class="hero-copy"><p class="eyebrow"><span class="live-dot"></span> iPHONE DUO · 概念交互研究</p><h1 id="hero-title">把屏幕留给内容。<br>把操作<span class="serif">留在手边。</span></h1><p class="intro">拇指打字，食指与中指移动光标。<br>让展开后的内屏与背面外屏，<br>组成一台握在手里的「笔记本」。</p><div class="hero-links"><a class="primary" href="#demo">亲手体验原型 <span>↗</span></a><button class="text-button" id="reveal-back">看看手指在哪里 <span>↻</span></button></div><p class="small-note">Monitor + Keyboard + Touchpad<br>熟悉的三部分，新的空间关系。</p></div>
-      <div class="model-panel">
-        <div class="model-top"><span>01 / GRIP STUDY</span><span id="model-label">展开 · 正面</span></div>
-        <canvas id="grip-canvas" aria-label="3D 概念模型：双手握持展开设备，拇指在正面键盘，食指和中指在背面触控板。可拖动旋转。" tabindex="0"></canvas>
-        <div class="model-legend"><span><i class="teal"></i>拇指 / 键盘</span><span><i class="orange"></i>食指 · 中指 / 触控板</span></div>
-        <div class="model-controls"><div class="segmented" aria-label="模型视角"><button data-view="front" aria-pressed="true">正面</button><button data-view="back" aria-pressed="false">背面</button><button data-view="orbit" aria-pressed="false">环绕</button></div><button class="round-button" id="pause-motion" aria-label="暂停动画" aria-pressed="false">Ⅱ</button><span class="drag-hint">拖动模型自由旋转</span></div>
-      </div>
-      <div class="grip-strip"><div><span class="eyebrow">试着换一种握法</span><div class="segmented light" aria-label="握持方向"><button data-grip="right" aria-pressed="true">外屏在右侧</button><button data-grip="bottom" aria-pressed="false">外屏在下方</button></div></div><p id="grip-description">右手食指与中指轻搭背面外屏，左手辅助支撑。双手拇指停留在正面键盘区。</p><small>示意模型用于表达手指分工，<br>不代表精确硬件尺寸或经验证的握姿。</small></div>
-    </section>
-
-    <section class="principle wrap" id="principle" aria-labelledby="principle-title">
-      <div class="section-heading"><p class="eyebrow">02 / WHY THIS LAYOUT</p><h2 id="principle-title">手握住设备，<br>操作也留在握持区。</h2><p>把笔记本上熟悉的分工，映射到前后两个显示面。<br>上方阅读，下方输入，背面控制。</p></div>
-      <div class="role-list"><button class="role-row active" data-action="overview"><span class="role-number">01</span><div><h3>Monitor <span>看内容</span></h3><p>内屏上方约 ¾ 留给远程画面，避免键盘和触控板挤占视野。</p></div><span class="role-icon">↗</span></button><button class="role-row" data-action="keyboard"><span class="role-number">02</span><div><h3>Keyboard <span>拇指打字</span></h3><p>内屏下方约 ¼ 常驻触摸键盘，保持双手握持时的输入位置。</p></div><span class="role-icon">⌨</span></button><button class="role-row" data-action="trackpad"><span class="role-number">03</span><div><h3>Touchpad <span>指尖控制</span></h3><p>让食指、中指在背面外屏完成相对移动、点击和滚动。</p></div><span class="role-icon">⌁</span></button></div>
-    </section>
-
-    <section class="demo-section" id="demo" aria-labelledby="demo-title"><div class="wrap">
-      <div class="demo-heading"><div><p class="eyebrow">03 / TRY IT YOURSELF</p><h2 id="demo-title">两块屏幕。一个工作空间。</h2><p>按 P 接管你的触控板，直接控制 Demo。按 Esc 返回 Mac。</p></div><span class="demo-badge"><span class="live-dot"></span> 本地交互模拟</span></div>
-      <div class="workbench-toolbar"><div class="edge-controls"><span>外屏位置</span><div class="segmented dark" aria-label="原型外屏位置"><button data-edge="left" aria-pressed="false">左侧</button><button data-edge="right" aria-pressed="true">右侧</button><button data-edge="top" aria-pressed="false">上方</button><button data-edge="bottom" aria-pressed="false">下方</button></div></div><button id="capture-input" class="capture-button" aria-pressed="false" aria-describedby="capture-help">接管触控板 · P</button><button id="toggle-window" class="reset-button" aria-pressed="false">展开窗口</button><button id="reset-demo" class="reset-button">↺ 重置演示</button></div>
-      <p id="capture-help" class="capture-help">接管后滑动即移动光标，点按与拖拽控制文稿。原生 Mac 调试台支持三指上滑展开；网页触摸屏支持三指手势，桌面网页可用“展开窗口”。</p>
-      <div class="capture-banner" id="capture-banner" hidden><span class="live-dot"></span> 你的触控板正在控制 Demo <kbd>Esc</kbd> 返回 Mac</div>
-      <div class="bench-viewport"><div id="bench" class="bench" data-edge="right" tabindex="-1">
-        <div class="inner-device"><div class="inner-screen"><div class="monitor" id="monitor" aria-label="模拟远程桌面"><div class="desktop-menubar"><span>DUO DESKTOP</span><span>LOCAL DEMO</span></div><button class="desktop-file" id="open-note"><span>▰</span>Demo</button><article class="note-window" id="note-window"><div class="window-title" id="window-title"><span class="traffic" aria-hidden="true"><i></i><i></i><i></i></span><span>Untitled — 我的远程文稿</span><span>⌘</span></div><div class="document-body" id="document-body"><p class="document-label">YOUR IDEAS, MORE ROOM.</p><div id="document-text" aria-label="演示文稿"></div></div></article><div class="desktop-cursor" id="desktop-cursor" aria-hidden="true"><svg viewBox="0 0 24 30"><path d="M2 2v23l6-6 5 10 5-3-5-9 9-1Z" fill="#172c39" stroke="white" stroke-width="2" stroke-linejoin="round"/></svg></div><div class="context-menu" id="context-menu" hidden><button data-command="select">全选文稿</button><button data-command="copy">复制到演示剪贴板</button><button data-command="clear">清空文稿</button></div></div><div class="touch-keyboard" id="keyboard" role="group" aria-label="常驻触摸键盘"></div></div><span class="device-caption">INNER / MONITOR + KEYBOARD</span></div>
-        <div class="outer-device"><div class="trackpad" id="trackpad" tabindex="0" role="application" aria-label="外屏触控板。按 P 接管后直接滑动移动光标，点击左键、按下拖拽标题栏、双指滚动。触摸屏上三指上滑展开、下滑还原文稿。"><span class="pad-eyebrow">OUTER DISPLAY</span><div class="pad-center"><span class="pad-glyph">⌁</span><h3>Touchpad</h3><p>食指 / 中指</p></div><div class="pad-trace" id="pad-trace"></div><span class="pad-bottom">SLIDE · TAP · SCROLL</span></div><span class="device-caption">OUTER / INDEPENDENT TOUCHPAD</span></div>
-      </div></div>
-      <div class="demo-status"><span id="input-status" role="status">就绪 · 按 P 或点击“接管触控板”开始</span><span>不会操作这台电脑</span></div>
-      <div class="gesture-guide"><div><b>01</b><span>滑动移动光标<br><small>接管后直接单指滑动，无需按下</small></span></div><div><b>02</b><span>双指滚动文稿<br><small>触控板滚轮或触摸屏双指滑动</small></span></div><div><b>03</b><span>展开与还原<br><small>Mac 调试台三指上滑；网页用按钮或三点触摸</small></span></div></div>
-    </div></section>
-
-    <section class="compare wrap" aria-labelledby="compare-title"><div class="section-heading"><p class="eyebrow">04 / THE DESIGN HYPOTHESIS</p><h2 id="compare-title">少一些越过屏幕。<br>多一些指尖配合。</h2><p>设计目标是减少大范围伸手与遮挡。<br>是否更自然、更精准，仍需在真实设备上验证。</p></div><div class="comparison"><div class="comparison-controls segmented light" aria-label="设计对比"><button data-comparison="combined" aria-pressed="false">全部集中在内屏</button><button data-comparison="separate" aria-pressed="true">内外屏分工</button></div><div class="compare-diagram" id="compare-diagram" data-mode="separate"><div class="diagram-front"><span class="diagram-monitor">Monitor</span><span class="diagram-pad">Touchpad</span><span class="diagram-keys">Keyboard</span></div><span class="diagram-arrow">↔</span><div class="diagram-back"><span>Touchpad</span><small>背面 · 食指 / 中指</small></div></div><p id="comparison-caption">显示留在前上方；拇指与背面指尖各司其职，触控板独立于内屏。</p></div></section>
-    <section class="questions wrap"><div><p class="eyebrow">NEXT / 从假设走向验证</p><h2>先验证握持，再验证效率。</h2></div><ul><li><span>01</span>双手长时间握持，是否容易疲劳？</li><li><span>02</span>支撑设备与触控输入，能否避免误触？</li><li><span>03</span>不同手型和握法，能否精准移动光标？</li><li><span>04</span>公开外屏接口，能否支持持续独立交互？</li></ul></section>
-  </main>
-  <footer class="wrap"><a class="wordmark" href="#">◧ DUO <span>GRIP LAB</span></a><p>交互概念原型 · 虚拟桌面与虚拟外屏<br>未接入真实远程控制；外屏能力需以可用公开 API 与实机验证为准。</p><span>MADE TO BE HELD.<br>DESIGNED TO BE TRIED.</span></footer>
-  <script type="module" src="./app.js"></script>
-</body>
-</html>
+<header class="nav"><a class="brand" href="#"><img src="./assets/Chordesk.svg" width="38" height="38" alt="">Chordesk</a><nav aria-label="主导航"><a href="#idea">设计思路</a><a href="#demo">亲手体验</a><a href="#status">开发进展</a></nav><a class="nav-source" href="https://github.com/STLAND-admin/Chordesk-site">GitHub ↗</a></header>
+<main>
+<section class="hero wrap">
+<p class="eyebrow">DESIGNED FOR iPHONE DUO</p>
+<h1>像按和弦一样，<br><span>切换你的桌面。</span></h1>
+<p class="lead">正面负责操作。背面选择方式。<br>让拇指的精细触控，配合食指与中指的轻轻按住。</p>
+<div class="hero-links"><a class="pill primary" href="#demo">体验 Chordesk</a><a href="#idea">为什么这样设计 <span aria-hidden="true">↓</span></a></div>
+<div class="model-panel">
+<div class="model-top"><span>握持概念 · 可拖动旋转</span><span id="model-label">展开 · 环绕</span></div>
+<canvas id="grip-canvas" tabindex="0" aria-label="双手握持 Duo 的 3D 概念模型：拇指在正面操作，食指与中指在背面按住切换。拖动旋转，也可用下方视角按钮。"></canvas>
+<p class="model-fallback" hidden>拇指在正面操作；食指与中指在背面按住切换。浏览器无法显示 3D，下面的交互演示仍可使用。</p>
+<div class="model-controls"><div class="segmented" aria-label="模型视角"><button data-view="front" aria-pressed="false">正面</button><button data-view="back" aria-pressed="false">背面</button><button data-view="orbit" aria-pressed="true">环绕</button></div><button id="pause-motion" class="glass" aria-pressed="false">暂停动画</button></div>
+</div>
+<div class="grip-strip"><div class="segmented" aria-label="握持方向"><button data-grip="right" aria-pressed="true">外屏在右侧</button><button data-grip="bottom" aria-pressed="false">外屏在下方</button></div><p>模型只说明手指分工，不代表硬件尺寸。<br>背面不再直接移动光标；精细操作留给正面。</p></div>
+</section>
+<section id="idea" class="insight wrap">
+<p class="eyebrow">THE INSIGHT</p><h2>背面不必是一块触控板。<br>它可以是一组<span>模式键。</span></h2>
+<div class="editorial"><p>最初，我们把外屏当作独立触控板。真机试用后发现，背面的食指、中指很难像正面拇指一样精准移动。于是，分工变了。</p><p>把需要精度的动作留在正面，把简单的“按住”交给背面。就像一只手按住吉他和弦，另一只手拨弦：相同的正面动作，在不同背面组合下有了不同含义。</p></div>
+<div class="chords"><button data-scene="direct" class="chord active"><span class="fingers">○ ○</span><strong>不按背面</strong><span>直接触控</span><small>点哪里，操作哪里。</small></button><button data-scene="overview" class="chord"><span class="fingers">● ○</span><strong>背面一指按住</strong><span>窗口总览</span><small>正面双指上推打开，下滑退出。</small></button><button data-scene="trackpad" class="chord"><span class="fingers">● ●</span><strong>背面双指长按</strong><span>临时触控板</span><small>正面相对移动，松手恢复触控。</small></button></div>
+<p class="footnote">减少伸手、遮挡与切换负担是设计目标，尚无量化的人体工学研究结论。</p>
+</section>
+<section id="demo" class="demo-section">
+<div class="wrap"><p class="eyebrow">PLAY THE CHORDS</p><h2>把手指的配合，<br>试给自己看。</h2><p class="demo-intro">这是浏览器内的模拟桌面。没有连接、读取或控制你的 Mac。</p>
+<div class="demo-toolbar"><button id="play-demo" class="pill primary" aria-pressed="false">播放操作示范</button><button id="reset-demo" class="pill">重置</button><span id="demo-mode" class="mode-chip" role="status">直接触控</span></div>
+<div class="demo-layout" id="demo-layout">
+<div class="front-device"><div id="monitor" class="monitor" data-mode="direct" tabindex="0" aria-label="模拟内屏，可直接点按文稿或按住后拖动。触控板模式下拖动可相对移动光标。">
+<div class="desktop-bar"><b>Chordesk</b><span>模拟远程桌面</span></div>
+<div class="desktop-file" aria-hidden="true">▤<small>Notes</small></div>
+<article class="note-window" id="note-window"><div class="window-title"><span class="traffic">● ● ●</span><span>一段想法</span></div><div class="document" id="document"><p class="document-eyebrow">A DESKTOP, WITHIN REACH.</p><h3>正面，留给精度。</h3><p>用拇指点按、滚动，或长按后拖选。</p><p>背面双指按住，切成触控板；松开恢复直接触控。键盘只在需要时出现。</p><p>背面一指配合正面双指上下滑，打开与退出窗口总览。</p><div id="typed-text" aria-label="模拟输入结果">Chordesk — 握在手里的工作空间。</div><p>这是示意内容。真实 App 使用 Mac 桌面，输入由手机键盘完成。</p></div></article>
+<div id="overview" class="overview" hidden><p>窗口总览 · 模拟 Mission Control</p><div class="overview-windows"><button data-window="文稿"><b>文稿</b><span>一段想法<br>正面，留给精度。</span></button><button data-window="浏览器"><b>浏览器</b><span>Chordesk<br>Play the chords.</span></button></div><small>点按一个窗口返回桌面</small></div>
+<div id="front-gesture" class="front-gesture" aria-hidden="true"><i></i><i></i><span></span></div>
+<div class="desktop-cursor" id="desktop-cursor" aria-hidden="true">➤</div><div id="tap-ring" class="tap-ring" hidden></div>
+<div class="front-dock"><button id="mode-toggle" class="glass" aria-label="菜单切换触控和触控板">☷</button><button id="keyboard-toggle" class="glass" aria-label="显示或收起模拟键盘" aria-pressed="false">⌨</button></div>
+<div id="keyboard" class="keyboard" hidden aria-label="网页示意键盘，不是系统输入法"></div>
+<div id="pad-material" class="pad-material" hidden><span>触控板 · 在正面移动</span></div>
+</div><span class="device-label">正面 · 拇指负责操作</span></div>
+<aside class="rear-device"><span class="eyebrow">背面 · 模式键</span><div class="rear-surface"><div class="rear-dots"><i id="rear-dot-one"></i><i id="rear-dot-two"></i></div><strong id="rear-title">握持，放松。</strong><p id="rear-description">默认直接触控<br>背面没有按住手指</p></div>
+<div class="rear-controls"><button id="hold-one" aria-pressed="false"><span>● ○</span>按住一指</button><button id="hold-two" aria-pressed="false"><span>● ●</span>长按双指</button></div>
+<div class="overview-controls"><button id="overview-up" disabled>↑ 正面双指上推</button><button id="overview-down" disabled>↓ 正面双指下滑</button></div>
+<p class="rear-help">桌面演示：按住 <kbd>1</kbd>，按 ↑ / ↓；按住 <kbd>2</kbd> 约半秒进入触控板，松开恢复。也可按住上面的按钮。<kbd>Esc</kbd> 释放。</p></aside>
+</div><p id="input-status" class="input-status" role="status" aria-live="polite">默认直接触控 · 在正面点一下试试</p>
+<div class="guide-row"><div><b>01 / 直接触控</b><p>点按操作；滑动滚动；长按后拖选。网页只演示坐标、滚动与选择反馈。</p></div><div><b>02 / 窗口总览</b><p>背面一指仅提供条件，正面双指上推／下滑才打开／退出，不是背面单击。</p></div><div><b>03 / 临时触控板</b><p>背面双指长按约 0.45 秒，正面改成相对指针；松开背面后恢复。App 也可设为触发一次切换。</p></div></div>
+</div></section>
+<section class="status-section wrap" id="status"><p class="eyebrow">FROM CONCEPT TO DEVICE</p><h2>已经握在手里。<br>继续打磨每一次切换。</h2><div class="status-grid"><div><span class="tag">当前 App</span><h3>Chordesk · Duo</h3><p>局域网配对、真实桌面、直接触控与触控板、原生输入法、背面组合切换。已在 Duo 手动验证多条操作路径。</p><p>背面仍依赖公开相机辅助接口。相机保持活动，画面不显示、不保存、不传输；这不是通用外屏接口或上架许可。</p></div><div><span class="tag">当前主机</span><h3>Chordesk · Mac 主机</h3><p>选择实体显示器、管理配对与权限、画质与文字大小。Mac 只提供主机窗口，本地概念演示留在此网站。</p><p>远程麦克风方向为 Duo → Mac 应用，默认关闭，需配置虚拟音频设备。新版声音链路仍需真机和会议应用验证。</p></div></div><div class="release-note"><b>先体验，再一起打磨。</b><p>现在可以把这个网页分享给朋友，先试操作逻辑。Duo 定向 TestFlight 与 Mac 安装包正在准备，当前还没有可下载版本；网页仅模拟，不连接真实电脑。</p><p>想给我们反馈？请说明尝试的动作、是否误触、学习成本，以及你更喜欢和弦还是菜单。反馈会公开，请勿上传配对二维码或私人桌面内容。</p><div class="hero-links"><a class="pill primary" href="https://github.com/STLAND-admin/Chordesk-site/issues/new?template=experience.yml">提交体验反馈 ↗</a><a href="https://github.com/STLAND-admin/Chordesk-site">查看网站源码 ↗</a></div></div></section>
+</main><footer class="wrap"><a class="brand" href="#"><img src="./assets/Chordesk.svg" width="34" height="34" alt="">Chordesk</a><p>STLAND 出品 · 为 iPhone Duo 探索新的远程操作方式</p><a href="#demo">再试一遍 ↑</a></footer>
+<script type="module" src="./app.js"></script>
+</body></html>
