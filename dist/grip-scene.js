@@ -1,6 +1,6 @@
 /**
  * Procedural, deliberately schematic Duo grip model (no hardware dimensions claimed).
- * createGripScene(canvas) -> setView(front|back|orbit), setGrip(right|bottom),
+ * createGripScene(canvas) -> setView(front|back|orbit), setGrip(left|right|bottom),
  * setAction(overview|keyboard|trackpad), setPlaying(boolean), resize(), dispose().
  * Right grip: right index/middle operate the rear half; bottom grip: both hands do.
  * Thumbs operate the front; rear fingers hold mode chords. All input remains browser-local.
@@ -274,7 +274,7 @@ export function createGripScene(canvas, {onContactChange = () => {}} = {}) {
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   let playing = !reducedMotion.matches, disposed = false;
-  let currentView = 'orbit', currentAction = 'direct', gripTarget = 0, gripBlend = 0;
+  let currentView = 'orbit', currentAction = 'direct', currentGrip = 'left', gripTarget = 0, gripBlend = 0;
   let contactOverride = null, lastContactCount = -1, lastTextureAction = 'direct';
   let manualOrbit = false;
   let yaw = .60, pitch = .18, targetYaw = yaw, targetPitch = pitch;
@@ -303,7 +303,8 @@ export function createGripScene(canvas, {onContactChange = () => {}} = {}) {
     targetPitch = view === 'orbit' ? .18 : .04;
   }
   function setGrip(grip) {
-    if (!['right', 'bottom'].includes(grip)) return;
+    if (!['left', 'right', 'bottom'].includes(grip)) return;
+    currentGrip = grip;
     gripTarget = grip === 'bottom' ? 1 : 0;
   }
   function setAction(action) {
@@ -356,6 +357,8 @@ export function createGripScene(canvas, {onContactChange = () => {}} = {}) {
     pitch = lerp(pitch, targetPitch, damping);
     hardware.rotation.z = -Math.PI / 2 * gripBlend;
     rearAssembly.rotation.z = hardware.rotation.z;
+    // Left/right are described from the front; the front desktop stays readable.
+    hardware.scale.x = rearAssembly.scale.x = currentGrip === 'left' ? -1 : 1;
     // A tiny sway reads as held, while the camera remains under the visitor's control.
     const sway = currentView === 'orbit' && playing && !dragging ? Math.sin(animationTime * .28) * .10 : 0;
     camera.position.set(Math.sin(yaw + sway) * Math.cos(pitch) * distance,
@@ -380,8 +383,9 @@ export function createGripScene(canvas, {onContactChange = () => {}} = {}) {
     }
     fingers.forEach((f, index) => {
       const points = f.from.map((p, i) => p.clone().lerp(f.to[i], gripBlend));
-      const firstContact = f.side > 0 && f.type === 'index';
-      const secondContact = gripBlend > .5 ? f.side < 0 && f.type === 'index' : f.side > 0 && f.type === 'middle';
+      const activeSide = currentGrip === 'left' ? -1 : 1;
+      const firstContact = f.side === activeSide && f.type === 'index';
+      const secondContact = gripBlend > .5 ? f.side < 0 && f.type === 'index' : f.side === activeSide && f.type === 'middle';
       const touchingRear = (firstContact && contactCount >= 1) || (secondContact && contactCount === 2);
       const roleActive = f.front || touchingRear;
       f.contactBlend = lerp(f.contactBlend ?? 0, touchingRear ? 1 : 0, damping);
