@@ -13,7 +13,7 @@ The complete website switches between Chinese and English. It remembers the lang
 - A highlighted ergonomic observation about the palm heel and thumb–index web supporting the device. This is the author's observation and a design hypothesis, not a quantified study.
 - A 3D grip model with 0 / 1 / 2 rear contacts, view and grip controls. The rear screen starts on the left when viewed from the front.
 - No rear contact: direct touch. One rear finger + two front fingers: Mission Control vertically, Spaces horizontally. Two rear fingers held: a temporary front trackpad.
-- A reserved section for the author's upcoming real-device video. The old 2D simulator has been removed from the page; its source remains in Git history.
+- A real-device video showing Duo and Mac together: 1080p, 30 fps, H.264, no audio, 2 minutes 10 seconds. Playback is user-initiated. The author explicitly chose to retain the full launch and QR-pairing sequence. The old 2D simulator remains in Git history.
 
 The page never connects to a host, captures a desktop, or requests camera/microphone access. The 3D model is an illustration, not exact device geometry or a hardware test.
 
