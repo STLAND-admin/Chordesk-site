@@ -2,56 +2,38 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f5f5f7">
-<title>Chordesk — 像按和弦一样，切换你的桌面。</title>
-<meta name="description" content="为 iPhone Duo 设计的远程桌面：拇指负责精细操作，背面手指像按和弦一样切换触控、窗口总览和触控板。旋转握持模型，体验交互原型。">
+<title>Chordesk — 指间和弦，掌控桌面。</title>
+<meta name="description" content="为 iPhone Duo 设计的远程桌面。拇指精细操作，背面手指按住切换：像弹奏和弦一样，让双面协同。">
 <link rel="icon" href="./assets/Chordesk.svg" type="image/svg+xml"><link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<header class="nav"><a class="brand" href="#"><img src="./assets/Chordesk.svg" width="38" height="38" alt="">Chordesk</a><nav aria-label="主导航"><a href="#idea">设计思路</a><a href="#demo">亲手体验</a><a href="#status">开发进展</a></nav><a class="nav-source" href="https://github.com/STLAND-admin/Chordesk-site">GitHub ↗</a></header>
+<header class="nav"><a class="brand" href="#"><img src="./assets/Chordesk.svg" width="34" height="34" alt="">Chordesk</a><nav data-i18n-aria="nav" aria-label="主导航"><a href="#idea" data-i18n="navIdea">设计思路</a><a href="#demo" data-i18n="navDemo">操作演示</a><a href="#status" data-i18n="navTry">开始体验</a></nav><div class="language-control" data-i18n-aria="language" aria-label="语言"><button data-language="zh" lang="zh-CN" aria-pressed="true">中</button><button data-language="en" lang="en" aria-pressed="false">EN</button></div></header>
 <main>
 <section class="hero wrap">
 <p class="eyebrow">DESIGNED FOR iPHONE DUO</p>
-<h1>像按和弦一样，<br><span>切换你的桌面。</span></h1>
-<p class="lead">正面负责操作。背面选择方式。<br>让拇指的精细触控，配合食指与中指的轻轻按住。</p>
-<div class="hero-links"><a class="pill primary" href="#demo">体验 Chordesk</a><a href="#idea">为什么这样设计 <span aria-hidden="true">↓</span></a></div>
-<div class="model-panel">
-<div class="model-top"><span>握持概念 · 可拖动旋转</span><span id="model-label">展开 · 环绕</span></div>
-<canvas id="grip-canvas" tabindex="0" aria-label="双手握持 Duo 的 3D 概念模型：拇指在正面操作，食指与中指在背面按住切换。拖动旋转，也可用下方视角按钮。"></canvas>
-<p class="model-fallback" hidden>拇指在正面操作；食指与中指在背面按住切换。浏览器无法显示 3D，下面的交互演示仍可使用。</p>
-<div class="model-controls"><div class="segmented" aria-label="模型视角"><button data-view="front" aria-pressed="false">正面</button><button data-view="back" aria-pressed="false">背面</button><button data-view="orbit" aria-pressed="true">环绕</button></div><button id="pause-motion" class="glass" aria-pressed="false">暂停动画</button></div>
+<h1><span data-i18n="heroFirst">指间和弦，</span><br><span class="muted" data-i18n="heroSecond">掌控桌面。</span></h1>
+<p class="lead" data-i18n="heroLead">拇指精细操作，背面手指按住切换。像弹奏和弦一样，让双面协同。</p>
+<div class="hero-links"><a class="pill primary" href="#status" data-i18n="heroTry">体验 Chordesk</a><a href="#idea" data-i18n="heroWhy">探索设计思路 ↓</a></div>
+<div class="model-panel" id="grip">
+<div class="model-top"><span data-i18n="modelConcept">握持概念 · 拖动旋转</span><span id="model-label">展开 · 环绕</span></div>
+<canvas id="grip-canvas" tabindex="0" data-i18n-aria="canvas" aria-label="双手握持 Duo 的 3D 概念示意，可拖动旋转，也可使用下方视角按钮。"></canvas>
+<p class="model-fallback" hidden data-i18n="modelFallback">当前浏览器无法显示 3D。拇指在正面操作，背面手指按住切换；下方展示各组和弦。</p>
+<div class="model-controls"><div class="segmented" data-i18n-aria="view" aria-label="模型视角"><button data-view="front" data-i18n="viewFront" aria-pressed="false">正面</button><button data-view="back" data-i18n="viewBack" aria-pressed="false">背面</button><button data-view="orbit" data-i18n="viewOrbit" aria-pressed="true">环绕</button></div><button id="pause-motion" class="glass" aria-pressed="false">暂停动画</button></div>
 </div>
-<div class="chord-controls"><span id="model-contacts" role="status">背面 0 指 · 直接触控</span><div class="segmented" aria-label="背面接触数"><button data-contact="0">0 指</button><button data-contact="1">1 指</button><button data-contact="2">2 指</button><button id="cycle-chords">循环示范</button></div></div>
-<div class="grip-strip"><div class="segmented" aria-label="握持方向"><button data-grip="left" aria-pressed="true">外屏在左侧</button><button data-grip="right" aria-pressed="false">外屏在右侧</button><button data-grip="bottom" aria-pressed="false">外屏在下方</button></div><p>默认外屏在左侧（以正面视角为准）。模型只说明手指分工，不代表硬件尺寸。<br>背面不再直接移动光标；精细操作留给正面。</p></div>
+<div class="chord-controls"><span id="model-contacts" role="status" aria-live="polite">背面 0 指 · 直接触控</span><div class="segmented" data-i18n-aria="contacts" aria-label="背面接触"><button data-contact="0" data-i18n="contactZero" aria-pressed="true">0 指</button><button data-contact="1" data-i18n="contactOne" aria-pressed="false">1 指</button><button data-contact="2" data-i18n="contactTwo" aria-pressed="false">2 指</button><button id="cycle-chords" data-i18n="cycle">循环示范</button></div></div>
+<div class="grip-strip"><div class="segmented" data-i18n-aria="grip" aria-label="握持方向"><button data-grip="left" data-i18n="gripLeft" aria-pressed="true">外屏在左</button><button data-grip="right" data-i18n="gripRight" aria-pressed="false">外屏在右</button><button data-grip="bottom" data-i18n="gripBottom" aria-pressed="false">外屏在下</button></div><p data-i18n="modelNote">默认外屏在左侧，以正面视角为准。模型用于说明手指分工，不代表硬件尺寸。</p></div>
 </section>
 <section id="idea" class="insight wrap">
-<p class="eyebrow">THE INSIGHT</p><h2>背面不必是一块触控板。<br>它可以是一组<span>模式键。</span></h2>
-<div class="editorial"><p>最初，我们把外屏当作独立触控板。真机试用后发现，背面的食指、中指很难像正面拇指一样精准移动。于是，分工变了。</p><p>把需要精度的动作留在正面，把简单的“按住”交给背面。就像一只手按住吉他和弦，另一只手拨弦：相同的正面动作，在不同背面组合下有了不同含义。</p></div>
-<div class="chords"><button data-scene="direct" class="chord active"><span class="fingers">○ ○</span><strong>不按背面</strong><span>直接触控</span><small>点哪里，操作哪里。</small></button><button data-scene="overview" class="chord"><span class="fingers">● ○</span><strong>背面一指按住</strong><span>窗口总览</span><small>正面双指上推打开，下滑退出。</small></button><button data-scene="trackpad" class="chord"><span class="fingers">● ●</span><strong>背面双指长按</strong><span>临时触控板</span><small>正面相对移动，松手恢复触控。</small></button></div>
-<p class="footnote">减少伸手、遮挡与切换负担是设计目标，尚无量化的人体工学研究结论。</p>
+<p class="eyebrow">THE INSIGHT</p>
+<h2 data-i18n="ideaTitle">Duo 多出的，不只是屏幕。</h2>
+<div class="editorial"><p data-i18n="ideaOrigin">开始做 Chordesk 时，我一直在想：Duo 这种形态，与 iPad、iPhone 究竟有什么不同？对交互而言，一个关键差异是——展开后，背面还多了一块屏幕。它可以为正面的操作增加一个维度。</p><p data-i18n="ideaTrackpad">我最初把这块背屏当作独立触控板：正面是桌面和键盘，食指、中指在背后移动光标，接近笔记本的操作分工。但真正握持后，背面手指的精度成了问题。</p></div>
+<aside class="ergonomics"><p class="eyebrow" data-i18n="ergonomicsLabel">一个来自实际握持的观察</p><p><strong data-i18n="ergonomicsBody">握持 Duo 时，掌根和虎口是支撑设备的接触点；它们不像操作 Mac 触控板时那样能自由调整。食指、中指要大幅移动，就可能扰动这些支点，让握持不稳。背面交互的设计，需要同时考虑手指的活动与支撑的稳定。</strong></p><p class="footnote" data-i18n="ergonomicsNote">这是作者试用中的人体工学观察，可作为其他前后屏协作 App 的设计假设，尚未经系统实验量化。</p></aside>
+<div class="editorial next-idea"><h3 data-i18n="divisionTitle">把精度留给正面，把和弦交给背面。</h3><p data-i18n="divisionBody">让拇指完成点按、滚动和精细定位，背面只做轻轻按住。像一只手按住和弦，另一只手拨弦：同一个正面动作，可以随着背面组合而改变含义。</p></div>
+<div class="chords"><button data-scene="direct" class="chord active" aria-pressed="true"><span class="fingers" aria-hidden="true">○ ○</span><strong data-i18n="chordZeroLabel">不按背面</strong><span data-i18n="chordZeroTitle">直接触控</span><small data-i18n="chordZeroBody">点按、滚动、长按拖选，都在正面完成。</small></button><button data-scene="overview" class="chord" aria-pressed="false"><span class="fingers" aria-hidden="true">● ○</span><strong data-i18n="chordOneLabel">背面一指按住</strong><span data-i18n="chordOneTitle">窗口与桌面</span><small data-i18n="chordOneBody">正面双指上下滑打开／退出总览，左右滑切换桌面。</small></button><button data-scene="trackpad" class="chord" aria-pressed="false"><span class="fingers" aria-hidden="true">● ●</span><strong data-i18n="chordTwoLabel">背面双指长按</strong><span data-i18n="chordTwoTitle">临时触控板</span><small data-i18n="chordTwoBody">正面改为相对指针，松开背面恢复。精细动作仍由拇指完成。</small></button></div>
+<p class="footnote" data-i18n="chordNote">3D 是动作示意，不控制电脑。减少遮挡、误触和疲劳是设计目标，不是已证实的性能结论。</p>
 </section>
-<section id="demo" class="demo-section">
-<div class="wrap"><p class="eyebrow">PLAY THE CHORDS</p><h2>把手指的配合，<br>试给自己看。</h2><p class="demo-intro">这是浏览器内的模拟桌面。没有连接、读取或控制你的 Mac。</p>
-<div class="demo-toolbar"><button id="play-demo" class="pill primary" aria-pressed="false">播放操作示范</button><button id="reset-demo" class="pill">重置</button><span id="demo-mode" class="mode-chip" role="status">直接触控</span></div>
-<div class="demo-layout" id="demo-layout">
-<div class="front-device"><div id="monitor" class="monitor" data-mode="direct" tabindex="0" aria-label="模拟内屏，可直接点按文稿或按住后拖动。触控板模式下拖动可相对移动光标。">
-<div class="desktop-bar"><b>Chordesk</b><span>模拟远程桌面</span></div>
-<div class="desktop-file" aria-hidden="true">▤<small>Notes</small></div>
-<article class="note-window" id="note-window"><div class="window-title"><span class="traffic">● ● ●</span><span>一段想法</span></div><div class="document" id="document"><p class="document-eyebrow">A DESKTOP, WITHIN REACH.</p><h3>正面，留给精度。</h3><p>用拇指点按、滚动，或长按后拖选。</p><p>背面双指按住，切成触控板；松开恢复直接触控。键盘只在需要时出现。</p><p>背面一指配合正面双指上下滑，打开与退出窗口总览。</p><div id="typed-text" aria-label="模拟输入结果">Chordesk — 握在手里的工作空间。</div><p>这是示意内容。真实 App 使用 Mac 桌面，输入由手机键盘完成。</p></div></article>
-<div id="overview" class="overview" hidden><p>窗口总览 · 模拟 Mission Control</p><div class="overview-windows"><button data-window="文稿"><b>文稿</b><span>一段想法<br>正面，留给精度。</span></button><button data-window="浏览器"><b>浏览器</b><span>Chordesk<br>Play the chords.</span></button></div><small>点按一个窗口返回桌面</small></div>
-<div id="front-gesture" class="front-gesture" aria-hidden="true"><i></i><i></i><span></span></div>
-<div class="desktop-cursor" id="desktop-cursor" aria-hidden="true">➤</div><div id="tap-ring" class="tap-ring" hidden></div>
-<div class="front-dock"><button id="mode-toggle" class="glass" aria-label="菜单切换触控和触控板">☷</button><button id="keyboard-toggle" class="glass" aria-label="显示或收起模拟键盘" aria-pressed="false">⌨</button></div>
-<div id="keyboard" class="keyboard" hidden aria-label="网页示意键盘，不是系统输入法"></div>
-<div id="pad-material" class="pad-material" hidden><span>触控板 · 在正面移动</span></div>
-</div><span class="device-label">正面 · 拇指负责操作</span></div>
-<aside class="rear-device"><span class="eyebrow">背面 · 模式键</span><div class="rear-surface"><div class="rear-dots"><i id="rear-dot-one"></i><i id="rear-dot-two"></i></div><strong id="rear-title">握持，放松。</strong><p id="rear-description">默认直接触控<br>背面没有按住手指</p></div>
-<div class="rear-controls"><button id="hold-one" aria-pressed="false"><span>● ○</span>按住一指</button><button id="hold-two" aria-pressed="false"><span>● ●</span>长按双指</button></div>
-<div class="overview-controls"><button id="overview-up" disabled>↑ 正面双指上推</button><button id="overview-down" disabled>↓ 正面双指下滑</button></div>
-<p class="rear-help">桌面演示：按住 <kbd>1</kbd>，按 ↑ / ↓；按住 <kbd>2</kbd> 约半秒进入触控板，松开恢复。也可按住上面的按钮。<kbd>Esc</kbd> 释放。</p></aside>
-</div><p id="input-status" class="input-status" role="status" aria-live="polite">默认直接触控 · 在正面点一下试试</p>
-<div class="guide-row"><div><b>01 / 直接触控</b><p>点按操作；滑动滚动；长按后拖选。网页只演示坐标、滚动与选择反馈。</p></div><div><b>02 / 窗口总览</b><p>背面一指仅提供条件，正面双指上推／下滑才打开／退出，不是背面单击。</p></div><div><b>03 / 临时触控板</b><p>背面双指长按约 0.45 秒，正面改成相对指针；松开背面后恢复。App 也可设为触发一次切换。</p></div></div>
-</div></section>
-<section class="status-section wrap" id="status"><p class="eyebrow">FROM CONCEPT TO DEVICE</p><h2>已经握在手里。<br>继续打磨每一次切换。</h2><div class="status-grid"><div><span class="tag">当前 App</span><h3>Chordesk · Duo</h3><p>局域网配对、真实桌面、直接触控与触控板、原生输入法、背面组合切换。已在 Duo 手动验证多条操作路径。</p><p>背面仍依赖公开相机辅助接口。相机保持活动，画面不显示、不保存、不传输；这不是通用外屏接口或上架许可。</p></div><div><span class="tag">当前主机</span><h3>Chordesk · Mac 主机</h3><p>选择实体显示器、管理配对与权限、画质与文字大小。内置切换系统已有模式，自定义 HiDPI 保留兼容方案。Mac 只提供主机窗口，概念演示留在此网站。</p><p>远程麦克风方向为 Duo → Mac 应用，默认关闭，需配置虚拟音频设备。新版声音链路仍需真机和会议应用验证。</p></div></div><div class="release-note"><b>先体验，再一起打磨。</b><p>现在可以把这个网页分享给朋友，先试操作逻辑。Mac 已有私下分发的测试安装包，Duo 定向 TestFlight 正在准备；此页暂不提供下载，网页仅模拟，不连接真实电脑。</p><p>想给我们反馈？请说明尝试的动作、是否误触、学习成本，以及你更喜欢和弦还是菜单。反馈会公开，请勿上传配对二维码或私人桌面内容。</p><div class="hero-links"><a class="pill primary" href="https://github.com/STLAND-admin/Chordesk-site/issues/new?template=experience.yml">提交体验反馈 ↗</a><a href="https://github.com/STLAND-admin/Chordesk-site">查看网站源码 ↗</a></div></div></section>
-</main><footer class="wrap"><a class="brand" href="#"><img src="./assets/Chordesk.svg" width="34" height="34" alt="">Chordesk</a><p>STLAND 出品 · 为 iPhone Duo 探索新的远程操作方式</p><a href="#demo">再试一遍 ↑</a></footer>
+<section id="demo" class="video-section"><div class="wrap"><p class="eyebrow">SEE IT IN USE</p><h2 data-i18n="videoTitle">真实操作，值得亲眼看见。</h2><p class="video-intro" data-i18n="videoIntro">下一段演示将直接记录 Duo 与 Mac 的配合：从输入文字，到窗口总览，再到精细定位。</p><div class="video-placeholder" role="note"><div class="video-outline" aria-hidden="true"><span>⌁</span></div><strong data-i18n="videoSoon">真机演示视频 · 即将补充</strong><p data-i18n="videoPending">作者正在准备操作录屏。这里会放真实演示，当前没有可播放的视频。</p><a class="pill" href="#grip" data-i18n="videoExplore">先探索上方 3D 和弦示意 ↑</a></div></div></section>
+<section id="status" class="status-section wrap"><p class="eyebrow">FROM CONCEPT TO DEVICE</p><h2 data-i18n="statusTitle">已经握在手里，继续打磨。</h2><div class="status-grid"><article><span class="tag">iOS</span><h3>Chordesk · Duo</h3><p data-i18n="iosBody">局域网配对、直接触控与触控板、iPhone 输入法，以及背面组合手势。发行准备版加入完整操作手册与三盏背面接触灯，新安装默认自动唤起键盘。</p><p data-i18n="iosAvailability">Apple Developer Program 已通过，iOS 发行构建正在准备；目前还没有 TestFlight 或 App Store 下载链接。</p><a href="https://github.com/STLAND-admin/Chordesk#iphone-duo" data-i18n="iosLink">查看当前 Xcode 安装方式 ↗</a></article><article><span class="tag">macOS</span><h3>Chordesk · Mac</h3><p data-i18n="macBody">同一局域网内共享桌面，记住配对设备，管理画质与文字大小。主机可留在菜单栏后台运行，接电息屏后可重连；真正睡眠不保证可达。</p><p data-i18n="macAvailability">Apple Silicon 试用安装包现已公开。当前测试包未公证，首次启动请按 macOS 提示允许，并完成录屏和控制权限。</p><a class="pill primary" href="https://github.com/STLAND-admin/Chordesk/releases/tag/mac-v0.18.1-test" data-i18n="macLink">下载 Mac 试用版 ↗</a></article></div><div class="scope-note"><p data-i18n="cameraNote">背面仍使用公开相机辅助接口：采集会话保持活动，相机帧不显示、不保存、不传输。这不是通用外屏 API，也不表示该用途已通过 App Store 审核。</p><p data-i18n="scopeNote">当前仅局域网。公网、RDP 方案及非 Duo 测试列在开发计划中；Duo → Mac 麦克风默认关闭，当前需要配置虚拟音频设备。</p></div><div class="release-note"><h3 data-i18n="feedbackTitle">让下一次和弦，更自然。</h3><p data-i18n="feedbackBody">欢迎分享尝试的动作、误触、学习成本，以及和弦与菜单各自适合的场景。反馈将公开，请不要上传配对二维码或私人桌面内容。</p><div class="hero-links"><a class="pill" href="https://github.com/STLAND-admin/Chordesk-site/issues/new?template=experience.yml" data-i18n="feedbackLink">提交体验反馈 ↗</a><a href="https://github.com/STLAND-admin/Chordesk/blob/main/ROADMAP.md" data-i18n="roadmapLink">公开开发计划 ↗</a><a href="https://github.com/STLAND-admin/Chordesk" data-i18n="repoLink">App 源码 ↗</a></div></div></section>
+</main><footer class="wrap"><a class="brand" href="#"><img src="./assets/Chordesk.svg" width="30" height="30" alt="">Chordesk</a><p data-i18n="footer">STLAND 出品 · 探索前后屏协作的更多可能</p><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a><a href="https://github.com/STLAND-admin/Chordesk-site" data-i18n="siteSource">网站源码 ↗</a></footer>
 <script type="module" src="./app.js"></script>
 </body></html>

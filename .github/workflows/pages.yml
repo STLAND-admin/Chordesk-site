@@ -25,6 +25,7 @@ jobs:
       - name: Check JavaScript syntax
         run: |
           node --check dist/app.js
+          node --check dist/i18n.js
           node --check dist/grip-scene.js
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

@@ -1,45 +1,38 @@
-# Chordesk · 概念网站
+# Chordesk · Concept website
 
-**像按和弦一样，切换你的桌面。** STLAND 出品。
+**Play a chord. Control your desktop. / 指间和弦，掌控桌面。**
 
-本仓库只包含公开展示网页、浏览器内模拟和程序化握持模型。iOS／Mac 原生代码独立保存在私有仓库 `STLAND-admin/Chordesk`，不随网站发布。
+[Live website](https://stland-admin.github.io/Chordesk-site/) · [Native iOS and Mac source](https://github.com/STLAND-admin/Chordesk)
 
-## 当前交互
+The complete website switches between Chinese and English. It remembers the language locally; `?lang=en` and `?lang=zh` create shareable language links.
 
-- 默认全屏直接触控：拇指在正面点按、滚动、长按拖选；键盘按需显示。
-- **背面一指按住 + 正面双指上推／下滑**：打开／退出窗口总览。不是背面单击。
-- **背面双指长按约 0.45 秒**：正面临时变成触控板，松开背面后恢复。背面本身不移动光标。
-- App 还提供触发一次切换、边缘禁触、原生输入法和灵敏度设置；网页聚焦默认动作教学。
-- 3D 模型循环示范背面 **0 → 1 → 2 → 0** 指：抬起／落下与接触环同步，前屏随和弦切换示意。可手动选 0／1／2 指、暂停、选前／后／环绕视角；默认环绕在有背面接触时转到背面，手动旋转后尊重用户视角。默认外屏在左侧（相对于正面），左／右侧握法用对应同手食指与中指，下方握法用左右食指。模型用于说明分工，不表示精确尺寸。
+## What it shows
 
-## 浏览器演示
+- The origin: what distinguishes an unfolded Duo from an iPad or iPhone? The additional rear screen can add an interaction dimension.
+- The design evolution: from a rear trackpad to simple rear holds, leaving precise work to the thumbs in front.
+- A highlighted ergonomic observation about the palm heel and thumb–index web supporting the device. This is the author's observation and a design hypothesis, not a quantified study.
+- A 3D grip model with 0 / 1 / 2 rear contacts, view and grip controls. The rear screen starts on the left when viewed from the front.
+- No rear contact: direct touch. One rear finger + two front fingers: Mission Control vertically, Spaces horizontally. Two rear fingers held: a temporary front trackpad.
+- A reserved section for the author's upcoming real-device video. The old 2D simulator has been removed from the page; its source remains in Git history.
 
-点击“播放操作示范”依次观察触控 → 一指＋上推 → 一指＋下滑 → 双指长按 → 松开恢复。
+The page never connects to a host, captures a desktop, or requests camera/microphone access. The 3D model is an illustration, not exact device geometry or a hardware test.
 
-手动演示：按住数字 `1`，再按方向键 ↑ / ↓；按住 `2` 约半秒切到触控板并用鼠标在正面拖动，松开恢复。也可用背面面板中的按住按钮，触摸屏支持背面一指按钮与正面双指滑动组合。`Esc`、页面隐藏或失焦释放组合。浏览器不能可靠读取 Mac 触控板原始手指数，因此桌面使用显式键盘替身。
-
-所有文稿、窗口和动作只在网页内存中模拟；不采集真实屏幕，不接收远程输入，不请求麦克风权限，不保存录音。网页无真实远控连接。
-
-## 本地运行
+## Run locally
 
 ```sh
 python3 -m http.server 8744 --bind 127.0.0.1 --directory dist
 ```
 
-打开 `http://127.0.0.1:8744/`。无 npm 安装和构建步骤；请用 HTTP，避免 `file://` 对 ES modules 的限制。
+Open `http://127.0.0.1:8744/`. Buildless HTML/CSS/JavaScript; use HTTP for ES modules. Three.js 0.180.0 is vendored locally under its MIT license in `dist/vendor/THREE-LICENSE.txt`.
 
-## GitHub Pages
+## Publish
 
-工作流 `.github/workflows/pages.yml` 仅发布 `dist/`。仓库需要启用 Pages / GitHub Actions，并设置 Actions 变量 `PAGES_ENABLED=true`。未启用时工作流跳过发布，避免意外公开。
+GitHub Actions checks JavaScript and publishes only `dist/` to GitHub Pages. Enable Pages / Actions and set `PAGES_ENABLED=true`. Native source, builds, signing material and pairing information are not part of this website repository.
 
-公开体验地址：[Chordesk](https://stland-admin.github.io/Chordesk-site/)。2026-10-29 Pages 首次部署成功，HTTP 200 已核对。
+The Mac 0.18.1 Apple Silicon test installer is available from the linked native release (not notarized). Apple Developer Program enrollment is complete; an iOS distribution build is being prepared, with no TestFlight or App Store download yet. The camera accessory use must be disclosed in review; no claim of App Store approval is made.
 
-网页中的“提交体验反馈”打开 GitHub 模板，提交内容公开；不要求填写联系方式，不要包含配对凭据或私人桌面内容。原生 App 的 TestFlight 与公证 Mac 安装包仍在准备中。
+Feedback issues are public. Do not include pairing QR codes, credentials, or private desktop content.
 
-依赖：本地 Three.js 0.180.0（MIT，见 `dist/vendor/THREE-LICENSE.txt`），不依赖外部 CDN。`input-capture.js` 为旧演示保留模块，新版不启用 Pointer Lock；旧交互可从 Git 历史查看。
+## License
 
-## 能力与发布边界
-
-Duo 真机已有若干手动验证的远控、背面模式切换路径。公开相机辅助 API 仍需相机保持活动，丢弃所有画面；不能据此宣称通用外屏 API 或获得上架许可。
-
-远程麦克风为新增 Duo → Mac 功能，默认关闭，需在 Mac 配置虚拟音频设备；端到端语音质量仍待验证。iOS 计划 TestFlight，Mac 计划安装包；尚无公开下载版本。有关舒适度、精度和效率的优势属于设计假设。
+Project-owned code and content use [CC BY-NC-SA 4.0](LICENSE). Three.js retains its MIT license. See [NOTICE.md](NOTICE.md) for scope and attribution.
