@@ -29,7 +29,7 @@ Open `http://127.0.0.1:8744/`. Buildless HTML/CSS/JavaScript; use HTTP for ES mo
 
 GitHub Actions checks JavaScript and publishes only `dist/` to GitHub Pages. Enable Pages / Actions and set `PAGES_ENABLED=true`. Native source, builds, signing material and pairing information are not part of this website repository.
 
-The Mac 0.18.1 Apple Silicon test installer is available from the linked native release (not notarized). Apple Developer Program enrollment is complete; an iOS distribution build is being prepared, with no TestFlight or App Store download yet. The camera accessory use must be disclosed in review; no claim of App Store approval is made.
+The Mac 0.18.1 Apple Silicon test installer is available from the linked native release (not notarized). The [iOS TestFlight beta](https://testflight.apple.com/join/WZDXKgvg) is now linked from the homepage. It requires the companion Mac on the same local network. Regular iPhones use on-screen controls; hardware compatibility testing continues. The camera accessory use was disclosed in Beta App Review. TestFlight approval is not an App Store release.
 
 Feedback issues are public. Do not include pairing QR codes, credentials, or private desktop content.
 
