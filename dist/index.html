@@ -31,12 +31,6 @@
 <div class="editorial next-idea"><h3 data-i18n="divisionTitle">把精度留给正面，把和弦交给背面。</h3><p data-i18n="divisionBody">让拇指完成点按、滚动和精细定位，背面只做轻轻按住。像一只手按住和弦，另一只手拨弦：同一个正面动作，可以随着背面组合而改变含义。</p></div>
 <div class="chords"><button data-scene="direct" class="chord active" aria-pressed="true"><span class="fingers" aria-hidden="true">○ ○</span><strong data-i18n="chordZeroLabel">不按背面</strong><span data-i18n="chordZeroTitle">直接触控</span><small data-i18n="chordZeroBody">点按、滚动、长按拖选，都在正面完成。</small></button><button data-scene="overview" class="chord" aria-pressed="false"><span class="fingers" aria-hidden="true">● ○</span><strong data-i18n="chordOneLabel">背面一指按住</strong><span data-i18n="chordOneTitle">窗口与桌面</span><small data-i18n="chordOneBody">正面双指上下滑打开／退出总览，左右滑切换桌面。</small></button><button data-scene="trackpad" class="chord" aria-pressed="false"><span class="fingers" aria-hidden="true">● ●</span><strong data-i18n="chordTwoLabel">背面双指长按</strong><span data-i18n="chordTwoTitle">临时触控板</span><small data-i18n="chordTwoBody">正面改为相对指针，松开背面恢复。精细动作仍由拇指完成。</small></button></div>
 <p class="footnote" data-i18n="chordNote">3D 是动作示意，不控制电脑。减少遮挡、误触和疲劳是设计目标，不是已证实的性能结论。</p>
-<aside id="direct-touch" class="release-note" aria-labelledby="input-title">
-<h3 id="input-title" data-i18n="inputTitle">“直接触控”，如何实现？</h3>
-<p data-i18n="inputBody">这里的“直接触控”指触摸远程桌面画面来控制 Mac。手势识别和坐标映射由 Chordesk 实现，再通过 Apple 公开的 Core Graphics CGEvent 鼠标／像素滚轮接口发送输入。滚动惯性也由 Chordesk 生成，并未向被控 Mac 应用传入原生多点触摸。</p>
-<p data-i18n="inputLimit">公开接口核查 · 2026 年 11 月 4 日：截至本次查询，尚未找到 Apple 公开提供的、允许第三方远控向任意 Mac 应用注入原生多点触摸的通用接口。Apple 的 Touch on Mac 与 AppKit／Sidecar 文档讲的是应用接收系统触摸，不等于远程触摸注入 SDK；这项核查结论可能随公开接口更新而变化。</p>
-<div class="hero-links"><a href="https://developer.apple.com/touch-on-mac/" target="_blank" rel="noopener" data-i18n="inputTouchSource">Apple · Touch on Mac ↗</a><a href="https://developer.apple.com/documentation/technotes/tn3212-adopting-gesture-recognizers-for-sidecar-touch-support" target="_blank" rel="noopener" data-i18n="inputGestureSource">Apple · AppKit／Sidecar 触控文档 ↗</a></div>
-</aside>
 </section>
 <section id="demo" class="video-section"><div class="wrap">
 <p class="eyebrow">SEE IT IN USE</p><h2 data-i18n="videoTitle">真实操作，值得亲眼看见。</h2>
