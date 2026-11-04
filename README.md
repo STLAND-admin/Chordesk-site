@@ -29,7 +29,7 @@ Open `http://127.0.0.1:8744/`. Buildless HTML/CSS/JavaScript; use HTTP for ES mo
 
 GitHub Actions checks JavaScript and publishes only `dist/` to GitHub Pages. Enable Pages / Actions and set `PAGES_ENABLED=true`. Native source, builds, signing material and pairing information are not part of this website repository.
 
-The Mac 0.18.1 Apple Silicon test installer is available from the linked native release (not notarized). The [iOS TestFlight beta](https://testflight.apple.com/join/WZDXKgvg) is now linked from the homepage. It requires the companion Mac on the same local network. Regular iPhones use on-screen controls; hardware compatibility testing continues. The camera accessory use was disclosed in Beta App Review. TestFlight approval is not an App Store release.
+The current companion is Mac 0.28.0 for Apple Silicon/macOS 15.2+, Developer ID signed and notarized. iOS/iPadOS 1.32 (46) is available through the linked TestFlight beta. LAN needs no account; optional embedded Tailscale connects the user’s own private network across networks without a separate client. The camera-accessory purpose is disclosed in review materials. TestFlight availability is not a formal App Store release.
 
 Questions and feedback: [GitHub Issues](https://github.com/STLAND-admin/Chordesk/issues) or [styj@zju.edu.cn](mailto:styj@zju.edu.cn). Issues are public; do not include pairing QR codes, credentials, or private desktop content.
 
